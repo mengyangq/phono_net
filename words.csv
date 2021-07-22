@@ -1,4 +1,4 @@
-﻿Node,Ortho,Phono
+﻿node,ortho,phono
 1,a,x
 2,aardvark,ardvark
 3,aback,xb@k
@@ -6189,7 +6189,7 @@
 6188,fallible,f@l|bL
 6189,fallout,fclWt
 6190,fallow,f@lo
-6191,false,fcls
+6191,FALSE,fcls
 6192,falsehood,fclshUd
 6193,falsetto,fclsEto
 6194,falsification,fclsxfxkeS|n
@@ -17784,7 +17784,7 @@
 17783,truckload,tr^klod
 17784,truculent,tr^kyUlxnt
 17785,trudge,tr^J
-17786,true,tru
+17786,TRUE,tru
 17787,truffle,tr^fL
 17788,truism,truIzM
 17789,trump,tr^mp
