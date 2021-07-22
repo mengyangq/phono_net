@@ -96,7 +96,7 @@ m50_gc_smallworld <- smallworldness(m50_gc, B = 1000, up = 0.995, lo = 0.005)
 delins_gc_smallworld <- smallworldness(delins_gc, B = 1000, up = 0.995, lo = 0.005)
 
 
-
+all_gc_smallworld <- smallworldness(all_gc, B = 1000, up = 0.995, lo = 0.005)
 all_gc_random_cc <- numeric(1000)
 all_gc_random_mean_distance <- numeric(1000)
 for (i in 1:1000) {
@@ -155,6 +155,23 @@ for (i in 1:1000) {
 delins_gc_cc_test <- z.test(delins_gc_random_cc, sigma.x = sd(delins_gc_random_cc), mu = delins_gc_cc)
 delins_gc_mean_distance_test <- z.test(delins_gc_random_mean_distance, sigma.x = sd(delins_gc_random_mean_distance), mu = delins_gc_mean_distance)
 
+
+
+
+pdf(file = "all.pdf", width = 200, height = 200)
+plot(all_gc, vertex.shape = "none", edge.width = .001,  edge.curved = .2, vertex.label = V(all_gc)$ortho)
+title("All",cex.main=2)
+dev.off()
+
+pdf(file = "replace.pdf", width = 100, height = 100)
+plot(replace_gc, vertex.shape = "none", edge.width = .001,  edge.curved = .2, vertex.label = V(replace_gc)$ortho)
+title("Replace",cex.main=2)
+dev.off()
+
+pdf(file = "delins.pdf", width = 100, height = 100)
+plot(delins_gc, vertex.shape = "none", edge.width = .001,  edge.curved = .2, vertex.label = V(delins_gc)$ortho)
+title("Delete/Insert",cex.main=2)
+dev.off()
 
 
 
