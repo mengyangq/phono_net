@@ -19,6 +19,7 @@ replace_l50_links <- read.csv("phono_replace_less50.csv",header=T,as.is=T)
 
 replace_m50_links <- read.csv("phono_replace_more50.csv",header=T,as.is=T)
 
+delins_links <- read.csv("phono_insertdelete.csv",header=T,as.is=T)
 
 all_net <- graph_from_data_frame(d = all_links, vertices = nodes, directed = F)
 
@@ -28,7 +29,7 @@ l50_net <- graph_from_data_frame(d = replace_l50_links, vertices = nodes, direct
 
 m50_net <- graph_from_data_frame(d = replace_m50_links, vertices = nodes, directed = F)
 
-
+delins_net <- graph_from_data_frame(d = delins_links, vertices = nodes, directed = F)
 
 all_net <- delete.vertices(all_net, which(degree(all_net) < 1))
 
@@ -38,10 +39,13 @@ l50_net <- delete.vertices(l50_net, which(degree(l50_net) < 1))
 
 m50_net <- delete.vertices(m50_net, which(degree(m50_net) < 1))
 
+delins_net <- delete.vertices(delins_net, which(degree(delins_net) < 1))
+
 all_net_simple <- simplify(all_net)
 replace_net_simple <- simplify(replace_net)
 l50_net_simple <- simplify(l50_net)
 m50_net_simple <- simplify(m50_net)
+delins_net_simple <- simplify(delins_net)
 
 all_gc <- giant_component_extract(all_net_simple, directed = FALSE)
 all_gc <- all_gc[[1]]
@@ -55,6 +59,12 @@ l50_gc <- l50_gc[[1]]
 m50_gc <- giant_component_extract(m50_net_simple, directed = FALSE)
 m50_gc <- m50_gc[[1]]
 
+delins_gc <- giant_component_extract(delins_net_simple, directed = FALSE)
+delins_gc <- delins_gc[[1]]
+
+write.csv(degree(all_gc),file = "all_gc_degree.csv") 
+write.csv(as_data_frame(all_gc,what='vertices'),file = "all_gc_node.csv")
+
 write.csv(degree(replace_gc),file = "replace_gc_degree.csv") 
 write.csv(as_data_frame(replace_gc,what='vertices'),file = "replace_gc_node.csv")    
 
@@ -64,19 +74,27 @@ write.csv(as_data_frame(l50_gc,what='vertices'),file = "l50_gc_node.csv")
 write.csv(degree(m50_gc),file = "m50_gc_degree.csv") 
 write.csv(as_data_frame(m50_gc,what='vertices'),file = "m50_gc_node.csv")
 
+write.csv(degree(delins_gc),file = "delins_gc_degree.csv") 
+write.csv(as_data_frame(delins_gc,what='vertices'),file = "delins_gc_node.csv")
 
 all_gc_cc <- transitivity(all_gc, type = "global", vids = NULL, weights = NULL)
 replace_gc_cc <- transitivity(replace_gc, type = "global", vids = NULL, weights = NULL)
 l50_gc_cc <- transitivity(l50_gc, type = "global", vids = NULL, weights = NULL)
 m50_gc_cc <- transitivity(m50_gc, type = "global", vids = NULL, weights = NULL)
+delins_gc_cc <- transitivity(delins_gc, type = "global", vids = NULL, weights = NULL)
 
 all_gc_mean_distance <- mean_distance(all_gc, unconnected = TRUE)
 replace_gc_mean_distance <- mean_distance(replace_gc, unconnected = TRUE)
 l50_gc_mean_distance <- mean_distance(l50_gc, unconnected = TRUE)
 m50_gc_mean_distance <- mean_distance(m50_gc, unconnected = TRUE)
+delins_gc_mean_distance <- mean_distance(delins_gc, unconnected = TRUE)
 
+all_gc_smallworld <- smallworldness(all_gc, B = 1000, up = 0.995, lo = 0.005)
+replace_gc_smallworld <- smallworldness(replace_gc, B = 1000, up = 0.995, lo = 0.005)
+l50_gc_smallworld <- smallworldness(l50_gc, B = 1000, up = 0.995, lo = 0.005)
+m50_gc_smallworld <- smallworldness(m50_gc, B = 1000, up = 0.995, lo = 0.005)
+delins_gc_smallworld <- smallworldness(delins_gc, B = 1000, up = 0.995, lo = 0.005)
 
-#ca_net_top1000_gc_smallworld <- smallworldness(ca_net_top1000_gc, B = 100, up = 0.995, lo = 0.005)
 
 
 all_gc_random_cc <- numeric(1000)
