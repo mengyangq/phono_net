@@ -145,6 +145,16 @@ m50_gc_mean_distance_test <- z.test(m50_gc_random_mean_distance, sigma.x = sd(m5
 
 
 
+delins_gc_random_cc <- numeric(1000)
+delins_gc_random_mean_distance <- numeric(1000)
+for (i in 1:1000) {
+     rn <- erdos.renyi.game(vcount(delins_gc), ecount(delins_gc), type = "gnm")
+     delins_gc_random_cc[i] <- transitivity(rn, type = "global", vids = NULL, weights = NULL)
+     delins_gc_random_mean_distance[i] <- mean_distance(rn, unconnected = TRUE)
+}
+delins_gc_cc_test <- z.test(delins_gc_random_cc, sigma.x = sd(delins_gc_random_cc), mu = delins_gc_cc)
+delins_gc_mean_distance_test <- z.test(delins_gc_random_mean_distance, sigma.x = sd(delins_gc_random_mean_distance), mu = delins_gc_mean_distance)
+
 
 
 
