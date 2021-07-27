@@ -15,19 +15,22 @@ all_links <- read.csv("phono.csv",header=T,as.is=T)
 
 replace_links <- read.csv("phono_replace.csv",header=T,as.is=T)
 
-replace_l50_links <- read.csv("phono_replace_less50.csv",header=T,as.is=T)
+#replace_l50_links <- read.csv("phono_replace_less50.csv",header=T,as.is=T)
 
-replace_m50_links <- read.csv("phono_replace_more50.csv",header=T,as.is=T)
+#replace_m50_links <- read.csv("phono_replace_more50.csv",header=T,as.is=T)
 
 delins_links <- read.csv("phono_insertdelete.csv",header=T,as.is=T)
+
+l50_links <- read.csv("phono_less50.csv",header=T,as.is=T)
+m50_links <- read.csv("phono_more50.csv",header=T,as.is=T)
 
 all_net <- graph_from_data_frame(d = all_links, vertices = nodes, directed = F)
 
 replace_net <- graph_from_data_frame(d = replace_links, vertices = nodes, directed = F)
 
-l50_net <- graph_from_data_frame(d = replace_l50_links, vertices = nodes, directed = F)
+l50_net <- graph_from_data_frame(d = l50_links, vertices = nodes, directed = F)
 
-m50_net <- graph_from_data_frame(d = replace_m50_links, vertices = nodes, directed = F)
+m50_net <- graph_from_data_frame(d = m50_links, vertices = nodes, directed = F)
 
 delins_net <- graph_from_data_frame(d = delins_links, vertices = nodes, directed = F)
 
@@ -46,6 +49,55 @@ replace_net_simple <- simplify(replace_net)
 l50_net_simple <- simplify(l50_net)
 m50_net_simple <- simplify(m50_net)
 delins_net_simple <- simplify(delins_net)
+
+
+
+write.csv(degree(all_net_simple),file = "all_degree.csv") 
+write.csv(as_data_frame(all_net_simple,what='vertices'),file = "all_node.csv")
+
+write.csv(degree(replace_net_simple),file = "replace_degree.csv") 
+write.csv(as_data_frame(replace_net_simple,what='vertices'),file = "replace_node.csv")
+
+write.csv(degree(delins_net_simple),file = "delins_degree.csv") 
+write.csv(as_data_frame(delins_net_simple,what='vertices'),file = "delins_node.csv")
+
+write.csv(degree(l50_net_simple),file = "l50_degree.csv") 
+write.csv(as_data_frame(l50_net_simple,what='vertices'),file = "l50_node.csv")
+
+write.csv(degree(m50_net_simple),file = "m50_degree.csv") 
+write.csv(as_data_frame(m50_net_simple,what='vertices'),file = "m50_node.csv")
+
+
+all_cc <- transitivity(all_net_simple, type = "global", vids = NULL, weights = NULL)
+all_mean_distance <- mean_distance(all_net_simple, unconnected = TRUE)
+all_cc
+all_mean_distance
+
+replace_cc <- transitivity(replace_net_simple, type = "global", vids = NULL, weights = NULL)
+replace_mean_distance <- mean_distance(replace_net_simple, unconnected = TRUE)
+replace_cc
+replace_mean_distance
+
+delins_cc <- transitivity(delins_net_simple, type = "global", vids = NULL, weights = NULL)
+delins_mean_distance <- mean_distance(delins_net_simple, unconnected = TRUE)
+delins_cc
+delins_mean_distance
+
+l50_cc <- transitivity(l50_net_simple, type = "global", vids = NULL, weights = NULL)
+l50_mean_distance <- mean_distance(l50_net_simple, unconnected = TRUE)
+l50_cc
+l50_mean_distance
+
+m50_cc <- transitivity(m50_net_simple, type = "global", vids = NULL, weights = NULL)
+m50_mean_distance <- mean_distance(m50_net_simple, unconnected = TRUE)
+m50_cc
+m50_mean_distance
+
+vcount(all_net_simple)
+vcount(replace_net_simple)
+vcount(delins_net_simple)
+vcount(l50_net_simple)
+vcount(m50_net_simple)
 
 all_gc <- giant_component_extract(all_net_simple, directed = FALSE)
 all_gc <- all_gc[[1]]
