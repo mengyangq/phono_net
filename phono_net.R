@@ -25,6 +25,18 @@ l50_links <- read.csv("phono_less50.csv",header=T,as.is=T)
 m50_links <- read.csv("phono_more50.csv",header=T,as.is=T)
 
 all_net <- graph_from_data_frame(d = all_links, vertices = nodes, directed = F)
+all_net <- delete.vertices(all_net, which(degree(all_net) < 1))
+all_net_simple <- simplify(all_net)
+all_gc <- giant_component_extract(all_net_simple, directed = FALSE)
+all_gc <- all_gc[[1]]
+write.csv(degree(all_gc),file = "all_gc_degree.csv") 
+write.csv(as_data_frame(all_gc,what='vertices'),file = "all_gc_node.csv")
+
+sub_nodes <- read.csv("all_gc_node.csv",header=T,as.is=T)
+
+sub_nodes2 <- read.csv("all_node.csv",header=T,as.is=T)
+
+
 
 replace_net <- graph_from_data_frame(d = replace_links, vertices = nodes, directed = F)
 
@@ -34,7 +46,6 @@ m50_net <- graph_from_data_frame(d = m50_links, vertices = nodes, directed = F)
 
 delins_net <- graph_from_data_frame(d = delins_links, vertices = nodes, directed = F)
 
-all_net <- delete.vertices(all_net, which(degree(all_net) < 1))
 
 replace_net <- delete.vertices(replace_net, which(degree(replace_net) < 1))
 
@@ -50,6 +61,41 @@ l50_net_simple <- simplify(l50_net)
 m50_net_simple <- simplify(m50_net)
 delins_net_simple <- simplify(delins_net)
 
+
+
+replace_sub <- induced_subgraph(replace_net_simple,sub_nodes$node)
+l50_sub <- induced_subgraph(l50_net_simple,sub_nodes$node)
+m50_sub <- induced_subgraph(m50_net_simple,sub_nodes$node)
+delins_sub <- induced_subgraph(delins_net_simple,sub_nodes$node)
+
+
+write.csv(degree(replace_sub),file = "replace_sub.csv") 
+write.csv(degree(l50_sub),file = "l50_sub.csv")
+write.csv(degree(m50_sub),file = "m50_sub.csv")
+write.csv(degree(delins_sub),file = "delins_sub.csv")
+
+
+
+transitivity(replace_sub, type = "global", vids = NULL, weights = NULL)
+transitivity(l50_sub, type = "global", vids = NULL, weights = NULL)
+transitivity(m50_sub, type = "global", vids = NULL, weights = NULL)
+transitivity(delins_sub, type = "global", vids = NULL, weights = NULL)
+
+mean_distance(replace_sub, unconnected = TRUE)
+mean_distance(l50_sub, unconnected = TRUE)
+mean_distance(m50_sub, unconnected = TRUE)
+mean_distance(delins_sub, unconnected = TRUE)
+
+
+replace_sub2 <- induced_subgraph(replace_net_simple,sub_nodes2$node)
+l50_sub2 <- induced_subgraph(l50_net_simple,sub_nodes2$node)
+m50_sub2 <- induced_subgraph(m50_net_simple,sub_nodes2$node)
+delins_sub2 <- induced_subgraph(delins_net_simple,sub_nodes2$node)
+
+write.csv(degree(replace_sub2),file = "replace_sub2.csv") 
+write.csv(degree(l50_sub2),file = "l50_sub2.csv")
+write.csv(degree(m50_sub2),file = "m50_sub2.csv")
+write.csv(degree(delins_sub2),file = "delins_sub2.csv")
 
 
 write.csv(degree(all_net_simple),file = "all_degree.csv") 
