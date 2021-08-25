@@ -34,7 +34,14 @@ write.csv(as_data_frame(all_gc,what='vertices'),file = "all_gc_node.csv")
 
 sub_nodes <- read.csv("all_gc_node.csv",header=T,as.is=T)
 
-sub_nodes2 <- read.csv("all_node.csv",header=T,as.is=T)
+sub_nodes2 <- read.csv("subgraph_9075/all_node.csv",header=T,as.is=T)
+
+
+
+
+
+
+
 
 
 
@@ -97,9 +104,25 @@ write.csv(degree(l50_sub2),file = "l50_sub2.csv")
 write.csv(degree(m50_sub2),file = "m50_sub2.csv")
 write.csv(degree(delins_sub2),file = "delins_sub2.csv")
 
+all_cc<-transitivity(all_net_simple, type = "local", vids = NULL, weights = NULL)
+replace_cc<-transitivity(replace_sub2, type = "local", vids = NULL, weights = NULL)
+l50_cc<-transitivity(l50_sub2, type = "local", vids = NULL, weights = NULL)
+m50_cc<-transitivity(m50_sub2, type = "local", vids = NULL, weights = NULL)
+
+
+all_cc <- replace(all_cc, is.na(all_cc), -1)
+replace_cc <- replace(replace_cc, is.na(replace_cc), -1)
+l50_cc <- replace(l50_cc, is.na(l50_cc), -1)
+m50_cc <- replace(m50_cc, is.na(m50_cc), -1)
+
+write.csv(all_cc,file="all_cc.csv")
+write.csv(replace_cc,file="replace_cc.csv")
+write.csv(l50_cc,file="l50_cc.csv")
+write.csv(m50_cc,file="m50_cc.csv")
 
 write.csv(degree(all_net_simple),file = "all_degree.csv") 
 write.csv(as_data_frame(all_net_simple,what='vertices'),file = "all_node.csv")
+write.csv(as_data_frame(all_net_simple,what='edges'),file = "all_edge.csv")
 
 write.csv(degree(replace_net_simple),file = "replace_degree.csv") 
 write.csv(as_data_frame(replace_net_simple,what='vertices'),file = "replace_node.csv")
@@ -273,223 +296,12 @@ dev.off()
 
 
 
+all_node <- read.csv("all_node.csv",header=T,as.is=T)
+all_link <- read.csv("all_edge.csv",header=T,as.is=T)
 
-fr_links_top1000 <- read.csv("top1000/fr_top1000.csv",header=T,as.is=T)
-
-fr_net_top1000 <- graph_from_data_frame(d = fr_links_top1000, vertices = nodes, directed = F)
-
-fr_net_top1000 <- delete.vertices(fr_net_top1000, which(degree(fr_net_top1000) < 1))
-
-fr_net_top1000_simple <- simplify(fr_net_top1000)
-
-fr_net_top1000_gc <- giant_component_extract(fr_net_top1000_simple, directed = FALSE)
-
-fr_net_top1000_gc <- fr_net_top1000_gc[[1]]
+all_net_new <- graph_from_data_frame(d = all_link, vertices = all_node, directed = F)
 
 
+all_cc<-transitivity(all_net_new, type = "local", vids = NULL, weights = NULL)
 
-fr_net_top1000_gc_cc <- transitivity(fr_net_top1000_gc, type = "global", vids = NULL, weights = NULL)
-fr_net_top1000_gc_mean_distance <- mean_distance(fr_net_top1000_gc, unconnected = TRUE)
-fr_net_top1000_gc_comm <- cluster_fast_greedy(fr_net_top1000_gc, merges = TRUE, modularity = TRUE, membership = TRUE)
-fr_net_top1000_gc_modularity <- modularity(fr_net_top1000_gc_comm)
-#fr_net_top1000_gc_smallworld <- smallworldness(fr_net_top1000_gc, B = 100, up = 0.995, lo = 0.005)
-
-
-fr_net_top1000_gc_random_cc <- numeric(1000)
-fr_net_top1000_gc_random_mean_distance <- numeric(1000)
-for (i in 1:1000) {
-     rn <- erdos.renyi.game(vcount(fr_net_top1000_gc), ecount(fr_net_top1000_gc), type = "gnm")
-     fr_net_top1000_gc_random_cc[i] <- transitivity(rn, type = "global", vids = NULL, weights = NULL)
-     fr_net_top1000_gc_random_mean_distance[i] <- mean_distance(rn, unconnected = TRUE)
-}
-fr_net_top1000_gc_cc_test <- z.test(fr_net_top1000_gc_random_cc, sigma.x = sd(fr_net_top1000_gc_random_cc), mu = fr_net_top1000_gc_cc)
-fr_net_top1000_gc_mean_distance_test <- z.test(fr_net_top1000_gc_random_mean_distance, sigma.x = sd(fr_net_top1000_gc_random_mean_distance), mu = fr_net_top1000_gc_mean_distance)
-
-
-
-
-
-
-
-
-
-
-en_links_top1000 <- read.csv("top1000/en_top1000.csv",header=T,as.is=T)
-
-en_net_top1000 <- graph_from_data_frame(d = en_links_top1000, vertices = nodes, directed = F)
-
-en_net_top1000 <- delete.vertices(en_net_top1000, which(degree(en_net_top1000) < 1))
-
-en_net_top1000_simple <- simplify(en_net_top1000)
-
-en_net_top1000_gc <- giant_component_extract(en_net_top1000_simple, directed = FALSE)
-
-en_net_top1000_gc <- en_net_top1000_gc[[1]]
-
-
-
-en_net_top1000_gc_cc <- transitivity(en_net_top1000_gc, type = "global", vids = NULL, weights = NULL)
-en_net_top1000_gc_mean_distance <- mean_distance(en_net_top1000_gc, unconnected = TRUE)
-en_net_top1000_gc_comm <- cluster_fast_greedy(en_net_top1000_gc, merges = TRUE, modularity = TRUE, membership = TRUE)
-en_net_top1000_gc_modularity <- modularity(en_net_top1000_gc_comm)
-#en_net_top1000_gc_smallworld <- smallworldness(en_net_top1000_gc, B = 100, up = 0.995, lo = 0.005)
-
-
-en_net_top1000_gc_random_cc <- numeric(1000)
-en_net_top1000_gc_random_mean_distance <- numeric(1000)
-for (i in 1:1000) {
-     rn <- erdos.renyi.game(vcount(en_net_top1000_gc), ecount(en_net_top1000_gc), type = "gnm")
-     en_net_top1000_gc_random_cc[i] <- transitivity(rn, type = "global", vids = NULL, weights = NULL)
-     en_net_top1000_gc_random_mean_distance[i] <- mean_distance(rn, unconnected = TRUE)
-}
-en_net_top1000_gc_cc_test <- z.test(en_net_top1000_gc_random_cc, sigma.x = sd(en_net_top1000_gc_random_cc), mu = en_net_top1000_gc_cc)
-en_net_top1000_gc_mean_distance_test <- z.test(en_net_top1000_gc_random_mean_distance, sigma.x = sd(en_net_top1000_gc_random_mean_distance), mu = en_net_top1000_gc_mean_distance)
-
-
-ca_net_top1000_partial_cc <- numeric(1000)
-ca_net_top1000_partial_mean_distance <- numeric(1000)
-ca_net_top1000_partial_modularity <- numeric(1000)
-for (i in 1:1000) {
-     p_v <- sample(V(ca_net_top1000_gc),40)
-     pn <- induced_subgraph(ca_net_top1000_gc, p_v)
-     ca_net_top1000_partial_cc[i] <- transitivity(pn, type = "global", vids = NULL, weights = NULL)
-     ca_net_top1000_partial_mean_distance[i] <- mean_distance(pn, unconnected = TRUE)
-     pn_rw <- cluster_fast_greedy(pn, merges = TRUE, modularity = TRUE, membership = TRUE)
-     ca_net_top1000_partial_modularity[i] <- modularity(pn_rw)
-}
-
-fr_net_top1000_partial_cc <- numeric(1000)
-fr_net_top1000_partial_mean_distance <- numeric(1000)
-fr_net_top1000_partial_modularity <- numeric(1000)
-for (i in 1:1000) {
-     p_v <- sample(V(fr_net_top1000_gc),40)
-     pn <- induced_subgraph(fr_net_top1000_gc, p_v)
-     fr_net_top1000_partial_cc[i] <- transitivity(pn, type = "global", vids = NULL, weights = NULL)
-     fr_net_top1000_partial_mean_distance[i] <- mean_distance(pn, unconnected = TRUE)
-     pn_rw <- cluster_fast_greedy(pn, merges = TRUE, modularity = TRUE, membership = TRUE)
-     fr_net_top1000_partial_modularity[i] <- modularity(pn_rw)
-}
-
-
-en_net_top1000_partial_cc <- numeric(1000)
-en_net_top1000_partial_mean_distance <- numeric(1000)
-en_net_top1000_partial_modularity <- numeric(1000)
-for (i in 1:1000) {
-     p_v <- sample(V(en_net_top1000_gc),40)
-     pn <- induced_subgraph(en_net_top1000_gc, p_v)
-     en_net_top1000_partial_cc[i] <- transitivity(pn, type = "global", vids = NULL, weights = NULL)
-     en_net_top1000_partial_mean_distance[i] <- mean_distance(pn, unconnected = TRUE)
-     pn_rw <- cluster_fast_greedy(pn, merges = TRUE, modularity = TRUE, membership = TRUE)
-     en_net_top1000_partial_modularity[i] <- modularity(pn_rw)
-}
-
-df_top1000_cc <- data.frame(num = seq(1,3000),
-                    net = c(rep('ca', times=length(ca_net_top1000_partial_cc)),
-                            rep('en', times = length(en_net_top1000_partial_cc)),
-                            rep('fr', times = length(fr_net_top1000_partial_cc))),
-                    cc = c(ca_net_top1000_partial_cc, en_net_top1000_partial_cc, fr_net_top1000_partial_cc))
-
-t_top1000_cc<-pairwise.t.test(df_top1000_cc$cc,df_top1000_cc$net,paired=FALSE,p.adjust.method="bonferroni")
-
-df_top1000_mean_distance <- data.frame(num = seq(1,3000),
-                    net = c(rep('ca', times=length(ca_net_top1000_partial_mean_distance)),
-                            rep('en', times = length(en_net_top1000_partial_mean_distance)),
-                            rep('fr', times = length(fr_net_top1000_partial_mean_distance))),
-                    mean_distance = c(ca_net_top1000_partial_mean_distance, en_net_top1000_partial_mean_distance, fr_net_top1000_partial_mean_distance))
-
-t_top1000_mean_distance<-pairwise.t.test(df_top1000_mean_distance$mean_distance,df_top1000_mean_distance$net,paired=FALSE,p.adjust.method="bonferroni")
-
-
-df_top1000_modularity <- data.frame(num = seq(1,3000),
-                    net = c(rep('ca', times=length(ca_net_top1000_partial_modularity)),
-                            rep('en', times = length(en_net_top1000_partial_modularity)),
-                            rep('fr', times = length(fr_net_top1000_partial_modularity))),
-                    modularity = c(ca_net_top1000_partial_modularity, en_net_top1000_partial_modularity, fr_net_top1000_partial_modularity))
-
-t_top1000_modularity<-pairwise.t.test(df_top1000_modularity$modularity,df_top1000_modularity$net,paired=FALSE,p.adjust.method="bonferroni")
-
-
-ca_net_top1000_gc_degree <- degree(ca_net_top1000_gc, v=V(ca_net_top1000_gc), normalized = FALSE)
-en_net_top1000_gc_degree <- degree(en_net_top1000_gc, v=V(en_net_top1000_gc), normalized = FALSE)
-fr_net_top1000_gc_degree <- degree(fr_net_top1000_gc, v=V(fr_net_top1000_gc), normalized = FALSE)
-
-V(ca_net_top1000_gc)$label.color <- V(ca_net_top1000_gc)$category_color 
-V(en_net_top1000_gc)$label.color <- V(en_net_top1000_gc)$category_color 
-V(fr_net_top1000_gc)$label.color <- V(fr_net_top1000_gc)$category_color 
-
-pdf(file = "all_top1000.pdf", width = 45, height = 15)
-par(mfrow = c(1, 3),mai=c(0.22,0.22,0.22,0.22))
-plot(ca_net_top1000_gc, vertex.shape = "none", edge.width = .01,  edge.curved = .2, vertex.label = V(ca_net_top1000_gc)$uni_lemma,layout = layout_with_fr(ca_net_top1000_gc))
-title("Cantonese",cex.main=2)
-plot(en_net_top1000_gc, vertex.shape = "none", edge.width = .01,  edge.curved = .2, vertex.label = V(en_net_top1000_gc)$uni_lemma,layout = layout_with_fr(en_net_top1000_gc))
-title("English",cex.main=2)
-plot(fr_net_top1000_gc, vertex.shape = "none", edge.width = .01,  edge.curved = .2, vertex.label = V(fr_net_top1000_gc)$uni_lemma, layout = layout_with_fr(fr_net_top1000_gc))
-title("French",cex.main=2)
-dev.off()
-
-pdf(file = "all_top1000_t.pdf", width = 18, height = 6)
-par(mfrow = c(1, 3),mai=c(0.22,0.22,0.22,0.22))
-plot(ca_net_top1000_gc, vertex.shape = "none", edge.width = .01,  edge.curved = .2, vertex.label = V(ca_net_top1000_gc)$uni_lemma,layout = layout_in_circle(ca_net_top1000_gc))
-title("Cantonese",cex.main=2)
-plot(en_net_top1000_gc, vertex.shape = "none", edge.width = .01,  edge.curved = .2, vertex.label = V(en_net_top1000_gc)$uni_lemma,layout = layout_in_circle(en_net_top1000_gc))
-title("English",cex.main=2)
-plot(fr_net_top1000_gc, vertex.shape = "none", edge.width = .01,  edge.curved = .2, vertex.label = V(fr_net_top1000_gc)$uni_lemma, layout = layout_in_circle(fr_net_top1000_gc))
-title("French",cex.main=2)
-dev.off()
-
-
-mean(ca_net_top1000_gc_degree)
-mean(en_net_top1000_gc_degree)
-mean(fr_net_top1000_gc_degree)
-
-vcount(ca_net_top1000_gc)
-vcount(en_net_top1000_gc)
-vcount(fr_net_top1000_gc)
-
-ca_net_top1000_gc_cc
-en_net_top1000_gc_cc
-fr_net_top1000_gc_cc
-
-ca_net_top1000_gc_mean_distance
-en_net_top1000_gc_mean_distance
-fr_net_top1000_gc_mean_distance
-
-ca_net_top1000_gc_modularity
-en_net_top1000_gc_modularity
-fr_net_top1000_gc_modularity
-
-mean(ca_net_top1000_gc_random_cc, na.rm=TRUE)
-mean(en_net_top1000_gc_random_cc, na.rm=TRUE)
-mean(fr_net_top1000_gc_random_cc, na.rm=TRUE)
-
-
-mean(ca_net_top1000_gc_random_mean_distance, na.rm=TRUE)
-mean(en_net_top1000_gc_random_mean_distance, na.rm=TRUE)
-mean(fr_net_top1000_gc_random_mean_distance, na.rm=TRUE)
-
-mean(ca_net_top1000_gc_random_modularity, na.rm=TRUE)
-mean(en_net_top1000_gc_random_modularity, na.rm=TRUE)
-mean(fr_net_top1000_gc_random_modularity, na.rm=TRUE)
-
-
-t.test(ca_net_top1000_partial_cc,en_net_top1000_partial_cc)
-cohen.d(ca_net_top1000_partial_cc,en_net_top1000_partial_cc) 
-t.test(ca_net_top1000_partial_cc,fr_net_top1000_partial_cc)
-cohen.d(ca_net_top1000_partial_cc,fr_net_top1000_partial_cc) 
-t.test(en_net_top1000_partial_cc,fr_net_top1000_partial_cc)
-cohen.d(en_net_top1000_partial_cc,fr_net_top1000_partial_cc) 
-
-t.test(ca_net_top1000_partial_mean_distance,en_net_top1000_partial_mean_distance)
-cohen.d(ca_net_top1000_partial_mean_distance,en_net_top1000_partial_mean_distance) 
-t.test(ca_net_top1000_partial_mean_distance,fr_net_top1000_partial_mean_distance)
-cohen.d(ca_net_top1000_partial_mean_distance,fr_net_top1000_partial_mean_distance) 
-t.test(en_net_top1000_partial_mean_distance,fr_net_top1000_partial_mean_distance)
-cohen.d(en_net_top1000_partial_mean_distance,fr_net_top1000_partial_mean_distance) 
-
-
-t.test(ca_net_top1000_partial_modularity,en_net_top1000_partial_modularity)
-cohen.d(ca_net_top1000_partial_modularity,en_net_top1000_partial_modularity) 
-t.test(ca_net_top1000_partial_modularity,fr_net_top1000_partial_modularity)
-cohen.d(ca_net_top1000_partial_modularity,fr_net_top1000_partial_modularity) 
-t.test(en_net_top1000_partial_modularity,fr_net_top1000_partial_modularity)
-cohen.d(en_net_top1000_partial_modularity,fr_net_top1000_partial_modularity) 
+write.csv(all_cc,file="all_cc.csv")
