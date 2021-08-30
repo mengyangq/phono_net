@@ -1,4 +1,4 @@
-lower,node,ortho,phono,original,replace,delete_insert,pos_l50,pos_m50,all_cc,replace_cc,pos_l50_cc,pos_m50_cc
+Item,node,ortho,phono,original,replace,delete_insert,pos_l50,pos_m50,all_cc,replace_cc,pos_l50_cc,pos_m50_cc
 a,1,a,x,7,4,3,6,1,0.380952381,1,0.466666667,-1
 aback,3,aback,xb@k,3,2,1,2,1,0,0,0,-1
 abalone,6,abalone,@bxloni,1,0,1,1,0,-1,-1,-1,-1
@@ -2755,7 +2755,7 @@ fallacious,6185,fallacious,fxleS|s,1,1,0,1,0,-1,-1,-1,-1
 fallen,6187,fallen,fcl|n,2,1,1,1,1,0,-1,-1,-1
 fallout,6189,fallout,fclWt,2,0,2,1,1,0,-1,-1,-1
 fallow,6190,fallow,f@lo,12,10,2,11,1,0.424242424,0.4,0.509090909,-1
-false,6191,false,fcls,4,3,1,2,2,0.166666667,0,0,1
+FALSE,6191,FALSE,fcls,4,3,1,2,2,0.166666667,0,0,1
 falter,6198,falter,fcltX,7,5,2,6,1,0.285714286,0.3,0.4,-1
 fame,6199,fame,fem,24,19,5,14,10,0.307971014,0.380116959,0.527472527,0.822222222
 famed,6200,famed,femd,2,0,2,0,2,1,-1,-1,1
@@ -8334,7 +8334,7 @@ truce,17780,truce,trus,9,6,3,1,8,0.25,0.466666667,-1,0.321428571
 truck,17781,truck,tr^k,9,5,4,2,7,0.111111111,0.4,0,0.19047619
 truckle,17782,truckle,tr^kL,5,4,1,2,3,0.2,0.333333333,1,0.333333333
 trudge,17785,trudge,tr^J,4,4,0,2,2,0.333333333,0.333333333,1,1
-true,17786,true,tru,18,11,7,8,10,0.235294118,0.454545455,0.75,0.288888889
+TRUE,17786,TRUE,tru,18,11,7,8,10,0.235294118,0.454545455,0.75,0.288888889
 truffle,17787,truffle,tr^fL,4,3,1,2,2,0.166666667,0.333333333,0,1
 trump,17789,trump,tr^mp,2,1,1,2,0,0,-1,0,-1
 trunk,17796,trunk,tr^Gk,3,2,1,2,1,0.333333333,1,1,-1
